@@ -1,110 +1,112 @@
 # esti-realtime-translator
 
-A local macOS subtitle overlay for understanding Estonian lessons and English calls, with live Russian translation.
+Локальный оверлей для macOS: распознаёт эстонскую и английскую речь и показывает перевод на русский поверх других окон.
 
-I built this personal project while learning Estonian: following a teacher in Zoom was difficult, and I wanted readable translations without sending audio to a cloud service. It was developed with an AI coding assistant and tested during a real Estonian lesson on a **MacBook Pro M1 with 16 GB RAM**.
+Я создал этот личный проект, когда начал изучать эстонский. Следить за речью преподавателя в Zoom было сложно, поэтому хотелось видеть понятный перевод без отправки аудио в облако. Приложение разработано вместе с AI-помощником и проверено на настоящем уроке эстонского на **MacBook Pro M1 с 16 ГБ оперативной памяти**.
 
-![Overlay with example Estonian subtitles and Russian translation](docs/images/overlay.png)
+![Оверлей с примером эстонских субтитров и перевода на русский](docs/images/overlay.png)
 
-*Screenshot uses example text, not a recorded lesson.*
+*На скриншоте — демонстрационный текст, а не запись урока.*
 
-## What it does
+## Возможности
 
-- Captures system audio from Zoom, videos, and other apps; normal audio playback continues.
-- Runs streaming speech recognition and sentence-level translation locally.
-- Shows a translucent, movable overlay with adjustable width, height, font size, opacity, and two-column or stacked layout.
-- Keeps recent captions at the top; older captions shrink once and expire after a configurable timeout. Individual captions can be hidden.
-- Saves transcript and translation history by day, and words with their original context in a separate vocabulary window.
-- Supports Estonian → Russian and English → Russian profiles. Microphone capture and speaker diarization are outside the current scope.
+- Захват системного звука из Zoom, видео и других приложений с сохранением обычного воспроизведения.
+- Потоковое распознавание речи и перевод по предложениям полностью на компьютере.
+- Полупрозрачный оверлей, который можно перемещать между экранами и настраивать по ширине, высоте, размеру шрифта и прозрачности. Оригинал и перевод располагаются в двух колонках или друг под другом.
+- Свежие карточки появляются сверху. Старые один раз уменьшаются и исчезают по выбранному таймеру. Отдельную карточку можно скрыть вручную.
+- История оригиналов и переводов сохраняется по дням. Слова можно добавлять в отдельный словарь вместе с контекстом.
+- Профили эстонский → русский и английский → русский. Захват микрофона и определение говорящих не входят в текущую реализацию.
 
-The interface is currently in Russian. This is a personal learning aid; recognition and translation can make mistakes.
+Интерфейс на русском языке. Это личный инструмент для обучения: распознавание и перевод могут ошибаться.
 
-## Technology
+## Технологии
 
-| Component | Implementation |
+| Компонент | Реализация |
 | --- | --- |
-| macOS interface | SwiftUI, AppKit, native floating `NSPanel` |
-| System audio | Core Audio process taps through [AudioTee](https://github.com/makeusabrew/audiotee) |
-| Speech detection | [Silero VAD](https://github.com/snakers4/silero-vad), ONNX Runtime on CPU |
-| Estonian recognition | [TalTech Zipformer Large](https://huggingface.co/TalTechNLP/streaming-zipformer-large.et-en), streaming INT8 through [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) |
-| English recognition | [Streaming English Zipformer](https://huggingface.co/csukuangfj/sherpa-onnx-streaming-zipformer-en-2023-06-26), INT8 |
-| English punctuation and casing | [Edge-Punct-Casing](https://github.com/frankyoujian/Edge-Punct-Casing), INT8 through sherpa-onnx |
-| Translation | [NLLB distilled 600M](https://huggingface.co/facebook/nllb-200-distilled-600M), INT8 through [CTranslate2](https://github.com/OpenNMT/CTranslate2) and SentencePiece |
-| Optional recognition | TalTech Whisper Turbo through pywhispercpp/Metal; Parakeet V3 from an existing Handy model directory |
-| Optional translation | NLLB distilled 1.3B |
-| Processing and persistence | Python, bounded queues, JSONL events; local JSONL/TXT history and JSON vocabulary |
+| Интерфейс macOS | SwiftUI, AppKit, плавающая нативная панель `NSPanel` |
+| Системный звук | Core Audio process taps через [AudioTee](https://github.com/makeusabrew/audiotee) |
+| Определение речи | [Silero VAD](https://github.com/snakers4/silero-vad), ONNX Runtime на CPU |
+| Распознавание эстонского | [TalTech Zipformer Large](https://huggingface.co/TalTechNLP/streaming-zipformer-large.et-en), потоковая INT8-модель через [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) |
+| Распознавание английского | [Streaming English Zipformer](https://huggingface.co/csukuangfj/sherpa-onnx-streaming-zipformer-en-2023-06-26), INT8 |
+| Пунктуация и регистр английского | [Edge-Punct-Casing](https://github.com/frankyoujian/Edge-Punct-Casing), INT8 через sherpa-onnx |
+| Перевод | [NLLB distilled 600M](https://huggingface.co/facebook/nllb-200-distilled-600M), INT8 через [CTranslate2](https://github.com/OpenNMT/CTranslate2) и SentencePiece |
+| Дополнительные модели распознавания | TalTech Whisper Turbo через pywhispercpp/Metal; Parakeet V3 из установленной модели Handy |
+| Дополнительная модель перевода | NLLB distilled 1.3B |
+| Обработка и хранение данных | Python, очереди ограниченного размера, события JSONL; локальная история JSONL/TXT и словарь JSON |
 
-## Install from source
+## Установка из исходников
 
-Currently supported: **Apple Silicon macOS 14.2 or later**. Tested on M1 / 16 GB. Intel Macs and other operating systems have not been validated.
+Сейчас поддерживается **macOS 14.2 и новее на Apple Silicon**. Проверено на M1 / 16 ГБ. Работа на Intel Mac и других операционных системах не проверялась.
 
-Install Xcode Command Line Tools, [uv](https://docs.astral.sh/uv/), and FFmpeg. With Homebrew:
+Установите Xcode Command Line Tools, [uv](https://docs.astral.sh/uv/) и FFmpeg. При использовании Homebrew:
 
 ```sh
 xcode-select --install
 brew install uv ffmpeg
 ```
 
-Clone this repository, enter its directory, then run:
+Клонируйте репозиторий и запустите установку:
 
 ```sh
+git clone https://github.com/sergey-verevkin/esti-realtime-translator.git
+cd esti-realtime-translator
 ./setup.sh
 ```
 
-This builds the audio capture tool, creates Python environments, downloads Silero VAD, TalTech Zipformer Large and NLLB 600M, and installs `~/Applications/Realtime Translation.app`. Allow several GB of free space for runtimes, models and build files. Model downloads require internet access; subsequent recognition and translation work offline.
+Скрипт собирает инструмент захвата звука, создаёт окружения Python, скачивает Silero VAD, TalTech Zipformer Large и NLLB 600M, затем устанавливает `~/Applications/Realtime Translation.app`. Для окружений, моделей и файлов сборки потребуется несколько гигабайт свободного места. Интернет нужен для загрузки моделей; после установки распознавание и перевод работают без него.
 
-For English recognition and punctuation as well:
+Чтобы также установить английское распознавание и пунктуацию:
 
 ```sh
 ./setup.sh --english
 ```
 
-Open the installed app and grant system-audio recording permission if macOS asks. Choose a recognizer from **ET → Распознавание речи**. New installations default to TalTech Zipformer Large and NLLB 600M. Existing preferences remain in effect.
+Откройте установленное приложение и разрешите запись системного звука, если macOS запросит доступ. Модель выбирается в меню **ET → Распознавание речи**. Для новой установки по умолчанию используются TalTech Zipformer Large и NLLB 600M. Ранее сохранённые настройки сохраняются.
 
-**Keep the cloned directory in place.** The app bundle launches the Python environments and models in that directory; it is not a self-contained distributable. If you move the checkout, rebuild with `./overlay/build-app.sh`. Quit the app before replacing its bundle.
+**Оставьте папку репозитория на месте.** Приложение запускает окружения Python и модели из неё и не является автономным переносимым пакетом. После перемещения папки пересоберите приложение командой `./overlay/build-app.sh`. Перед заменой приложения завершите его работу.
 
-Optional models:
+Дополнительные модели:
 
 ```sh
-./capture-transcription/setup-zipformer.sh       # smaller Estonian Zipformer
+./capture-transcription/setup-zipformer.sh       # меньшая эстонская модель Zipformer
 ./capture-transcription/setup-whisper.sh         # TalTech Whisper / Metal
 ./translation/.venv/bin/python translation/download_nllb13.py
 ```
 
-Parakeet expects an existing Handy model installation; see the [capture guide](capture-transcription/README.md). Selecting an uninstalled optional model reports an installation error.
+Для Parakeet нужна уже установленная модель Handy; подробности — в [инструкции по распознаванию](capture-transcription/README.md). При выборе дополнительной модели, которая ещё не установлена, приложение сообщает об ошибке установки.
 
-## Use
+## Использование
 
-- **Control + Option + P:** pause/resume; **Control + Option + O:** show/hide overlay.
-- Drag the top handle to move the overlay between displays. Side handles resize width; the bottom handle resizes height.
-- Select **Zipformer Large TalTech · эстонский → русский** for lessons or **Zipformer · английский → русский** for English calls. The profile also sets NLLB's source language.
-- Click a word to save it with context. Open **Мой словарь…** or **История…** from the menu to review saved material.
-- Quit through the ET menu to stop capture and finalize remaining text.
+- **Control + Option + P:** пауза / продолжение; **Control + Option + O:** показать / скрыть оверлей.
+- Перетаскивайте оверлей за верхнюю ручку, в том числе между экранами. Боковые ручки меняют ширину, нижняя — высоту.
+- Для уроков выберите **Zipformer Large TalTech · эстонский → русский**, для английских звонков — **Zipformer · английский → русский**. Профиль также задаёт исходный язык для NLLB.
+- Нажмите на слово, чтобы сохранить его с контекстом. Сохранённые материалы доступны через **Мой словарь…** и **История…** в меню.
+- Завершайте приложение через меню ET: это останавливает захват и завершает обработку оставшегося текста.
 
-Data stays in `~/Documents/Realtime Translation/`; diagnostic logs are in `~/Library/Logs/Realtime Translation/`. Raw audio is not recorded by the normal overlay flow. No cloud inference or API keys are required. File replay and optional event-output commands are available for development.
+Данные хранятся в `~/Documents/Realtime Translation/`, диагностические журналы — в `~/Library/Logs/Realtime Translation/`. При обычной работе оверлея исходное аудио не записывается. Облачные модели и API-ключи не нужны. Для разработки доступны обработка аудиофайлов и вывод событий в файл.
 
-## How it works
+## Как это работает
 
 ```mermaid
 flowchart LR
-    A[System audio] --> B[16 kHz mono PCM]
-    B --> C[Speech detection and bounded buffers]
-    C --> D[Streaming recognition]
-    D --> E[English punctuation when selected]
-    E --> F[Sentence assembly]
-    F --> G[Local NLLB translation]
-    G --> H[Overlay and daily history]
+    A[Системный звук] --> B[Моно PCM 16 кГц]
+    B --> C[Определение речи и ограниченные буферы]
+    C --> D[Потоковое распознавание]
+    D --> E[Пунктуация для английского профиля]
+    E --> F[Сборка предложений]
+    F --> G[Локальный перевод NLLB]
+    G --> H[Оверлей и история по дням]
 ```
 
-Zipformer processes new audio incrementally and preserves decoder state. Pauses finalize speech; long speech has a bounded window. English punctuation retains a little future context before confirming sentence boundaries. Translation assembles confirmed fragments into sentences, with a length fallback for speech without clear punctuation. Recognition, translation and UI communicate through versioned JSONL events.
+Zipformer обрабатывает новые порции аудио последовательно, сохраняя состояние декодера. Паузы завершают фрагмент речи; для длинной речи действует ограничение размера окна. Английская пунктуация использует небольшой последующий контекст, прежде чем подтвердить границу предложения. Переводчик собирает подтверждённые фрагменты в предложения, а при отсутствии явной пунктуации ограничивает их длину. Распознавание, перевод и интерфейс обмениваются событиями JSONL с версией формата.
 
-On the author's M1, Zipformer Large updates were typically tens of milliseconds; short translations often took a few hundred milliseconds. These are **processing times**, not a measured guarantee of sound-to-caption latency. Buffering, acoustic context, sentence confirmation and queues also contribute. The reported usefulness in a lesson is personal experience, not a formal accuracy benchmark.
+На M1 автора обновления Zipformer Large обычно обрабатывались за десятки миллисекунд, а короткие переводы — за несколько сотен миллисекунд. Это **время обработки**, а не измеренная гарантия задержки от звука до субтитров. На общую задержку также влияют буферы, акустический контекст, подтверждение предложений и очереди. Оценка полезности на уроке основана на личном опыте, а не на формальном тесте точности.
 
-## Portability
+## Адаптация под другие системы
 
-The processing code is separated into `capture-transcription/`, `translation/` and `overlay/`. ONNX Runtime, sherpa-onnx and CTranslate2 have cross-platform runtimes, so the model-processing pieces can be adapted to Windows or Linux. A port still needs a replacement for Core Audio system capture, the native macOS overlay, packaging and permissions. It is not currently a cross-platform application.
+Код разделён на `capture-transcription/`, `translation/` и `overlay/`. У ONNX Runtime, sherpa-onnx и CTranslate2 есть среды выполнения для разных платформ, поэтому обработку моделей можно адаптировать под Windows или Linux. Для полноценного переноса потребуется заменить захват системного звука Core Audio, нативный оверлей macOS, упаковку приложения и работу с разрешениями. Сейчас приложение предназначено для macOS.
 
-## Development
+## Разработка
 
 ```sh
 capture-transcription/.venv/bin/python -m unittest discover -s capture-transcription/tests
@@ -113,12 +115,12 @@ swift build --package-path overlay -c release
 overlay/.build/release/realtime-overlay --self-test
 ```
 
-`./overlay/run.sh --demo` shows example captions without capturing audio. See the [Russian user guide](docs/user-guide.ru.md), [architecture](docs/architecture.md), [maintenance](docs/maintenance.md), and [contributing guide](CONTRIBUTING.md).
+`./overlay/run.sh --demo` показывает демонстрационные карточки без захвата звука. Дополнительные сведения: [руководство пользователя](docs/user-guide.ru.md), [архитектура](docs/architecture.md), [обслуживание](docs/maintenance.md) и [участие в разработке](CONTRIBUTING.md).
 
-## License and acknowledgements
+## Лицензия и благодарности
 
-Project code is released under the [MIT license](LICENSE). Model weights and third-party libraries retain their own licenses and are downloaded separately; none are bundled in this repository.
+Код проекта опубликован под [лицензией MIT](LICENSE). Веса моделей и сторонние библиотеки сохраняют собственные лицензии и загружаются отдельно; они не включены в репозиторий.
 
-**NLLB weights are CC BY-NC 4.0.** The default translation stack therefore has a non-commercial restriction despite the application's MIT code license. Commercial use requires a translation model with suitable terms. See [third-party notices](THIRD_PARTY_NOTICES.md) for model sources and licenses.
+**Веса NLLB распространяются под CC BY-NC 4.0.** Поэтому используемая по умолчанию модель перевода имеет ограничение на коммерческое использование, несмотря на MIT-лицензию кода приложения. Для коммерческого применения нужна модель перевода с подходящими условиями. Источники и лицензии перечислены в [уведомлениях о сторонних компонентах](THIRD_PARTY_NOTICES.md).
 
-Thanks to TalTech's language technology team, the sherpa-onnx/icefall community, AudioTee, Silero, Meta's NLLB team, OpenNMT, and the authors of Edge-Punct-Casing and whisper.cpp.
+Спасибо команде языковых технологий TalTech, сообществу sherpa-onnx/icefall, AudioTee, Silero, команде NLLB в Meta, OpenNMT, а также авторам Edge-Punct-Casing и whisper.cpp.
