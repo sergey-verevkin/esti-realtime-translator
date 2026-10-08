@@ -1,0 +1,31 @@
+capture-transcription/.venv/
+capture-transcription/.build/
+capture-transcription/vendor/
+capture-transcription/__pycache__/
+capture-transcription/tests/__pycache__/
+capture-transcription/output/
+capture-transcription/test-audio/
+*.pyc
+translation/.venv/
+translation/models/
+translation/output/
+translation/__pycache__/
+translation/tests/__pycache__/
+capture-transcription/models/
+overlay/.build/
+translation/.conversion-venv/
+
+# Synced ChatGPT project references are not part of the public source tree.
+/sources/
+/AGENTS.md
+.DS_Store
+.env
+.env.*
+*.log
+*.app/
+**/.swiftpm/
+# Retired local experiments (not used by the application).
+translation/install_opus.py
+translation/setup-opus.sh
+
+/dist/

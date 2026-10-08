@@ -1,0 +1,55 @@
+[
+  {
+    "text": "Tere hommikust!",
+    "meaning_ru": "Доброе утро!"
+  },
+  {
+    "text": "Ma ei saa täna koosolekul osaleda.",
+    "meaning_ru": "Я не могу сегодня участвовать в собрании."
+  },
+  {
+    "text": "Koosolek algab homme kell kümme.",
+    "meaning_ru": "Собрание начинается завтра в десять часов."
+  },
+  {
+    "text": "Palun saatke mulle need dokumendid enne reedet.",
+    "meaning_ru": "Пожалуйста, пришлите мне эти документы до пятницы."
+  },
+  {
+    "text": "Me ei ole seda otsust veel teinud.",
+    "meaning_ru": "Мы ещё не приняли это решение."
+  },
+  {
+    "text": "Kas sa saaksid palun aeglasemalt rääkida?",
+    "meaning_ru": "Не мог бы ты говорить медленнее?"
+  },
+  {
+    "text": "Ma õpin eesti keelt ja ei saanud viimasest lausest aru.",
+    "meaning_ru": "Я учу эстонский и не понял последнее предложение."
+  },
+  {
+    "text": "Meil on vaja veel kaks nädalat.",
+    "meaning_ru": "Нам нужны ещё две недели."
+  },
+  {
+    "text": "Tähtaeg on viieteistkümnendal oktoobril.",
+    "meaning_ru": "Срок — пятнадцатое октября."
+  },
+  {
+    "text": "See maksab sada kakskümmend eurot.",
+    "meaning_ru": "Это стоит сто двадцать евро."
+  },
+  {
+    "text": "Kui me selle homme valmis saame, siis",
+    "meaning_ru": "Если мы закончим это завтра, то… (незавершённая мысль)"
+  },
+  {
+    "text": "Tõnu ja Maarja töötavad selle projekti kallal.",
+    "meaning_ru": "Тыну и Маарья работают над этим проектом."
+  },
+  {
+    "text": "Kui palju kell on? Appi! Kell on juba kolmveerand kaksteist!",
+    "expected_meaning": "Который час? На помощь! Уже без четверти двенадцать (11:45)!",
+    "note": "User-provided textbook phrase; check all three sentences and quarter-hour."
+  }
+]

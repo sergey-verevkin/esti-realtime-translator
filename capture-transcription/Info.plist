@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>local.realtime-translation.capture</string>
+<key>CFBundleName</key><string>Realtime Capture</string>
+<key>NSAudioCaptureUsageDescription</key><string>Capture system audio for local live transcription. Audio is not uploaded.</string>
+</dict></plist>
